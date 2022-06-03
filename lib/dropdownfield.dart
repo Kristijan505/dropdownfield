@@ -85,7 +85,7 @@ class DropDownField extends FormField<String> {
       this.strict: true})
       : super(
           key: key,
-          autovalidate: false,
+          autovalidateMode: AutovalidateMode.disabled,
           initialValue: controller != null ? controller.text : (value ?? ''),
           onSaved: setter,
           builder: (FormFieldState<String> field) {
@@ -100,9 +100,8 @@ class DropDownField extends FormField<String> {
                         size: 30.0, color: Colors.black),
                     onPressed: () {
                       SystemChannels.textInput.invokeMethod('TextInput.hide');
-                      state.setState(() {
-                        state._showdropdown = !state._showdropdown;
-                      });
+                      state._showdropdown = !state._showdropdown;
+                      state.refresh();
                     }),
                 hintStyle: hintStyle,
                 labelStyle: labelStyle,
@@ -116,7 +115,7 @@ class DropDownField extends FormField<String> {
                   children: <Widget>[
                     Expanded(
                       child: TextFormField(
-                        autovalidate: true,
+                        autovalidateMode: AutovalidateMode.always,
                         controller: state._effectiveController,
                         decoration: effectiveDecoration.copyWith(
                             errorText: field.errorText),
@@ -124,7 +123,7 @@ class DropDownField extends FormField<String> {
                         textAlign: TextAlign.start,
                         autofocus: false,
                         obscureText: false,
-                        maxLengthEnforced: true,
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         maxLines: 1,
                         validator: (String newValue) {
                           if (required) {
@@ -174,7 +173,7 @@ class DropDownField extends FormField<String> {
                                       context: field.context,
                                       tiles: state._getChildren(state._items))
                                   .toList()
-                              : List(),
+                              : [],
                         ),
                       ),
               ],
@@ -189,7 +188,7 @@ class DropDownField extends FormField<String> {
 class DropDownFieldState extends FormFieldState<String> {
   TextEditingController _controller;
   bool _showdropdown = false;
-  bool _isSearching = true;
+  // bool _isSearching = true;
   String _searchText = "";
 
   @override
@@ -233,7 +232,7 @@ class DropDownFieldState extends FormFieldState<String> {
   @override
   void initState() {
     super.initState();
-    _isSearching = false;
+    // _isSearching = false;
     if (widget.controller == null) {
       _controller = TextEditingController(text: widget.initialValue);
     }
@@ -252,7 +251,7 @@ class DropDownFieldState extends FormFieldState<String> {
   }
 
   List<ListTile> _getChildren(List<String> items) {
-    List<ListTile> childItems = List();
+    List<ListTile> childItems = [];
     for (var item in items) {
       if (_searchText.isNotEmpty) {
         if (item.toUpperCase().contains(_searchText.toUpperCase()))
@@ -261,7 +260,7 @@ class DropDownFieldState extends FormFieldState<String> {
         childItems.add(_getListTile(item));
       }
     }
-    _isSearching ? childItems : List();
+    // _isSearching ? childItems : List();
     return childItems;
   }
 
@@ -276,7 +275,7 @@ class DropDownFieldState extends FormFieldState<String> {
           _effectiveController.text = text;
           _handleControllerChanged();
           _showdropdown = false;
-          _isSearching = false;
+          // _isSearching = false;
           if (widget.onValueChanged != null) widget.onValueChanged(text);
         });
       },
@@ -296,15 +295,17 @@ class DropDownFieldState extends FormFieldState<String> {
 
     if (_effectiveController.text.isEmpty) {
       setState(() {
-        _isSearching = false;
+        // _isSearching = false;
         _searchText = "";
       });
     } else {
       setState(() {
-        _isSearching = true;
+        // _isSearching = true;
         _searchText = _effectiveController.text;
         _showdropdown = true;
       });
     }
   }
+
+  void refresh() => setState(() {});
 }

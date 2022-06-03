@@ -87,7 +87,7 @@ class _ExampleFormState extends State<ExampleForm> {
                         constraints: BoxConstraints.expand(),
                         child: Form(
                             key: _formKey,
-                            autovalidate: false,
+                            autovalidateMode: AutovalidateMode.disabled,
                             child: SingleChildScrollView(
                                 child: Column(
                               children: <Widget>[

@@ -1,7 +1,6 @@
 name: dropdownfieldexample
 description: Demonstrates usage of dropdownfield
 version: 1.0.0
-author: Jagannathan S <jagan.srinivasan@gmail.com>
 homepage: https://bitbucket.org/AndroidFreak/dropdownfield/src/master/
 
 environment:
